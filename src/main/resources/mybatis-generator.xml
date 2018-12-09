@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+  
+<generatorConfiguration>
+	<context id="repertory" targetRuntime="MyBatis3">
+		<!-- 设置生成文件的编码 -->
+		<property name="javaFileEncoding" value="UTF-8"/>
+		
+		<commentGenerator>
+			<property name="suppressDate" value="true"/>
+			<!-- <property name="suppressAllComments" value="true"/> -->
+			<property name="addRemarkComments" value="true"/>
+			<property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"/>
+		</commentGenerator>
+
+		<!--数据库链接-->  
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" 
+	        connectionURL="jdbc:mysql://127.0.0.1:3306/repertory" 
+	        userId="root" password="password">
+        </jdbcConnection>
+        
+        <javaTypeResolver>  
+        	<!-- 使用BigDecimal -->
+            <property name="forceBigDecimals" value="true"/>
+            <!-- 使用Java8中新的时间类 -->
+            <property name="useJSR310Types" value="true"/> 
+        </javaTypeResolver>
+        
+        <!-- 生成Model类的存放位置 -->  
+        <javaModelGenerator targetPackage="com.school.repertory.dao.model" targetProject="src/main/java">  
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        
+        <!-- 生成Mapper类的存放位置 -->
+        <javaClientGenerator type="ANNOTATEDMAPPER" targetPackage="com.school.repertory.dao.mapper" 
+        	targetProject="src/main/java">  
+        </javaClientGenerator>
+        
+        <!-- 访问日志表 -->
+        <table tableName="access_log">
+        </table>
+        
+        <!-- 客户信息表 -->
+        <table tableName="customer">
+        </table>
+        
+        <!-- 货物信息表 -->
+        <table tableName="goods">
+        </table>
+        
+        <!-- 货物库存信息表 -->
+        <table tableName="goods_storage">
+        </table>
+        
+        <!-- 入库信息表 -->
+        <table tableName="in_record">
+        </table>
+        
+        <!-- 出库信息表 -->
+        <table tableName="out_record">
+        </table>
+        
+        <!-- 供应商信息表 -->
+        <table tableName="supplier">
+        </table>
+        
+        <!-- 系统用户表 -->
+        <table tableName="system_user">
+        </table>
+	</context>
+</generatorConfiguration>
