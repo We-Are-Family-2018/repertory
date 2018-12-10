@@ -23,7 +23,7 @@ import com.school.repertory.controller.form.SupplierForm;
 
 @Controller
 @RequestMapping("/repertory")
-public class RepertoryController {
+public class ApiController {
 
 	@RequestMapping("/searchInventory")
 	@ResponseBody

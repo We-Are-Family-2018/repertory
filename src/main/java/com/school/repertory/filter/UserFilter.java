@@ -30,7 +30,7 @@ public class UserFilter implements Filter {
 	@Autowired
 	private SystemService systemService;
 	
-	private final static String USER_COOKIE_KEY = "r_user";
+	public final static String USER_COOKIE_KEY = "r_user";
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -43,10 +43,12 @@ public class UserFilter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		Cookie[] cookies = httpRequest.getCookies();
 		String cookieValue = null;
-		for (Cookie cookie : cookies) {
-			if (USER_COOKIE_KEY.equals(cookie.getName())) {
-				cookieValue = cookie.getValue();
-				break;
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (USER_COOKIE_KEY.equals(cookie.getName())) {
+					cookieValue = cookie.getValue();
+					break;
+				}
 			}
 		}
 		

@@ -22,4 +22,17 @@ public class SystemService {
 		
 		return user;
 	}
+	
+	public SystemUser authUser(String username, String password) {
+		SystemUser user = userMapper.selectByPrimaryKey(username);
+		if (user == null) {
+			return null;
+		}
+		
+		if (!user.getUserPassword().equals(password)) {
+			return null;
+		}
+		
+		return user;
+	}
 }

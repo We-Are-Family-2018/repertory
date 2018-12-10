@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+<div class="layui-side-scroll" th:fragment="left-nav">
+  <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+  <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+    <li id="inventory-nav" class="layui-nav-item">
+      <a class="" href="javascript:;">库存管理</a>
+      <dl class="layui-nav-child">
+      <dd id="inventory-item"><a href="inventory.html">库存查询</a></dd>
+      </dl>
+    </li>
+    <li id="storage-nav" class="layui-nav-item">
+      <a href="javascript:;">出入库管理</a>
+      <dl class="layui-nav-child">
+      <dd id="in-storage-record-item"><a href="in-storage-record.html">入库记录</a></dd>
+      <dd id="out-storage-record-item"><a href="out-storage-record.html">出库记录</a></dd>
+      <dd id="in-storage-item"><a href="in-storage.html">货物入库</a></dd>
+      <dd id="out-storage-item"><a href="out-storage.html">货物出库</a></dd>
+      </dl>
+    </li>
+    <li id="repertory-admin-nav" class="layui-nav-item">
+      <a href="javascript:;">人员管理</a>
+      <dl class="layui-nav-child">
+      <dd id="repertory-admin-item"><a href="repertory-admin.html">人员信息查询</a></dd>
+      <dd id="import-repertory-admin-item"><a href="import-repertory-admin.html">人员导入</a></dd>
+      </dl>
+    </li>
+    <li id="supplier-nav" class="layui-nav-item">
+      <a href="javascript:;">供应商管理</a>
+      <dl class="layui-nav-child">
+      <dd id="supplier-item"><a href="supplier.html">供应商信息查询</a></dd>
+      <dd id="import-supplier-item"><a href="import-supplier.html">供应商导入</a></dd>
+      </dl>
+    </li>
+    <li id="customer-nav" class="layui-nav-item">
+      <a href="javascript:;">客户管理</a>
+      <dl class="layui-nav-child">
+      <dd id="customer-item"><a href="customer.html">客户信息查询</a></dd>
+      <dd id="import-customer-item"><a href="import-customer.html">客户导入</a></dd>
+      </dl>
+    </li>
+    <li id="goods-nav" class="layui-nav-item">
+      <a href="javascript:;">货物信息管理</a>
+      <dl class="layui-nav-child">
+      <dd id="goods-item"><a href="goods.html">货物信息查询</a></dd>
+      <dd id="import-goods-item"><a href="import-goods.html">货物信息导入</a></dd>
+      </dl>
+    </li>
+    <li id="system-nav" class="layui-nav-item">
+      <a href="javascript:;">系统管理</a>
+      <dl class="layui-nav-child">
+      <dd id="login-log-item"><a href="login-log.html">登录日志</a></dd>
+      </dl>
+    </li>
+  </ul>
+</div>
+</body>
