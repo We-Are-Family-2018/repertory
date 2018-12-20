@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,18 +36,31 @@ public class WebController extends BaseController {
 	@Autowired
 	private SystemService systemService;
 	
-	@RequestMapping(value="/index")
-	public String index(@RequestAttribute(name="user", required=false) SystemUser user, Model model) {
+	/**
+	 * - 提取Servlet request中的user，填充到Model中
+	 * @param user 用户信息
+	 * @return
+	 */
+	@ModelAttribute(name="user")
+	public SystemUser extractUser(@RequestAttribute(name="user", required=false) SystemUser user) {
+		return user;
+	}
+	
+	@RequestMapping(value={"/", "/index"})
+	public String index(@ModelAttribute(name="user") SystemUser user, Model model) {
 		if (user == null) {
 			return "redirect:/login";
 		}
-		
-		model.addAttribute("user", user);
+
 		return "index";
 	}
 	
 	@RequestMapping(value="/login", method=RequestMethod.GET)
-	public String loginPage() {
+	public String loginPage(@ModelAttribute(name="user") SystemUser user) {
+		if (user != null) {
+			return "redirect:/index";
+		}
+		
 		return "login";
 	}
 	
@@ -79,6 +93,17 @@ public class WebController extends BaseController {
 		
 		// 重定向页面
 		return "redirect:/index";
+	}
+	
+	@RequestMapping(value="/logout")
+	public String logout(HttpServletResponse response) {
+		// 删除cookie
+		Cookie cookie = new Cookie(UserFilter.USER_COOKIE_KEY, "");
+		cookie.setMaxAge(0);
+		response.addCookie(cookie);
+		
+		// 重定向页面
+		return "redirect:/login";
 	}
 	
 	@RequestMapping(value="/500")
