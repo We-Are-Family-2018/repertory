@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>仓储管理系统</title>
+  <link rel="stylesheet" href="layui/css/layui.css" th:href="@{/layui/css/layui.css}">
+  <link rel="stylesheet" href="css/common.css" th:href="@{/css/common.css}">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+  <!-- 头部导航 -->
+  <div id="header" th:insert="header-nav :: header-nav"></div>
+  <!-- 左侧导航 -->
+  <div id="left-nav" class="layui-side layui-bg-black" th:insert="left-nav :: left-nav"></div>
+  
+  <div class="layui-body cmm-div-container">
+    <!-- 查询表单区域 -->
+    <div class="layui-form layui-card layui-bg-gray" lay-filter="search-form">
+      <!-- 面板Header -->
+      <div class="layui-card-header"><h3>库存查询</h3></div>
+      <!-- 面板Body -->
+      <div class="layui-card-body">
+        <!-- 一行表单项 -->
+        <div class="layui-form-item">
+          <!-- 货物编号 -->
+          <div class="layui-inline">
+            <label class="layui-form-label">货物编号</label>
+            <div class="layui-input-inline" style="width: 25em">
+              <input type="text" name="goodsNo" maxlength="36" autocomplete="off" placeholder="请输入货物编号" class="layui-input">
+            </div>
+          </div>
+          <!-- 货物名称 -->
+          <div class="layui-inline">
+            <label class="layui-form-label">货物名称</label>
+            <div class="layui-input-inline">
+              <input type="text" name="goodsName" autocomplete="off" placeholder="请输入货物名称" class="layui-input">
+            </div>
+          </div>
+        </div>
+
+        <!-- 一行表单项 -->
+        <div class="layui-form-item">
+          <!-- 货物规格 -->
+          <div class="layui-inline" style="width: 33.5em">
+            <label class="layui-form-label">货物规格</label>
+            <!-- 长 -->
+            <div class="layui-input-inline" style="width: 5em">
+              <input type="text" name="goodsLength" autocomplete="off" placeholder="长(cm)" class="layui-input" lay-verify="nullableNumber">
+            </div>
+            <div class="layui-form-mid">×</div>
+            <!-- 宽 -->
+            <div class="layui-input-inline" style="width: 5em">
+              <input type="text" name="goodsWidth" autocomplete="off" placeholder="宽(cm)" class="layui-input" lay-verify="nullableNumber">
+            </div>
+            <div class="layui-form-mid">×</div>
+            <!-- 高 -->
+            <div class="layui-input-inline" style="width: 5em">
+              <input type="text" name="goodsHeight" autocomplete="off" placeholder="高(cm)" class="layui-input" lay-verify="nullableNumber">
+            </div>
+          </div>
+          <!-- 货物保价 -->
+          <div class="layui-inline">
+            <label class="layui-form-label">货物保价</label>
+            <div class="layui-input-inline" style="width: 5em">
+              <input type="text" name="goodsValueMin" autocomplete="off" placeholder="￥" class="layui-input" lay-verify="nullableNumber">
+            </div>
+            <div class="layui-form-mid">-</div>
+            <div class="layui-input-inline" style="width: 5em">
+              <input type="text" name="goodsValueMax" autocomplete="off" placeholder="￥" class="layui-input" lay-verify="nullableNumber">
+            </div>
+          </div>
+          <!-- 在库数量 -->
+          <div class="layui-inline">
+            <label class="layui-form-label">在库数量</label>
+            <div class="layui-input-inline" style="width: 5em">
+              <input type="text" name="countMin" autocomplete="off" placeholder=">=" class="layui-input" lay-verify="integer">
+            </div>
+            <div class="layui-form-mid">-</div>
+            <div class="layui-input-inline" style="width: 5em">
+              <input type="text" name="countMax" autocomplete="off" placeholder="<=" class="layui-input" lay-verify="integer">
+            </div>
+          </div>
+        </div>
+        <!-- 一行表单项 -->
+        <div class="layui-form-item">
+          <!-- 提交按钮 -->
+          <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="submit-btn">查询</button>
+            <button class="layui-btn" lay-submit="" lay-filter="export-btn">导出CSV</button>
+            <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="reset-btn">重置</button>
+          </div>
+        </div>
+        <!-- 表单项到底了 -->
+      </div>
+    </div>
+
+    <!-- 数据表格区域 -->
+    <div>
+      <table id="main-table" class="layui-hide"></table>
+    </div>
+  </div>
+  
+</div>
+<script src="js/jquery-3.3.1.js" th:src="@{/js/jquery-3.3.1.js}"></script>
+<script src="js/moudle.js" th:src="null"></script>
+<script src="layui/layui.js" th:src="@{/layui/layui.js}"></script>
+<script src="js/verify.js" th:src="@{/js/verify.js}"></script>
+
+<script th:inline="javascript">
+//JavaScript代码区域
+layui.use(['element', 'table', 'form'], function(){
+  var element = layui.element;
+  var table = layui.table;
+  var form = layui.form;
+
+  // 侧边栏展开初始化
+  $('#inventory-nav').addClass('layui-nav-itemed');
+  $('#inventory-item').addClass('layui-this');
+
+  // 渲染数据表格
+  table.render({
+	id: 'mainTable'
+    ,elem: '#main-table'
+    ,url: /*[[@{/inventory/search-inventory-data}]]*/ 'data/inventory.json'
+    ,cols: [
+    	[
+    		{type: 'numbers', title: '序号', align: 'center', width: 60}
+            ,{field: 'goodsNo', width: 400, title: '货物编号', sort: true}
+            ,{field: 'goodsName', title: '货物名称'}
+            ,{field: 'goodsSize', width: 200, title: '货物规格（长×宽×高）'}
+            ,{field: 'goodsValue', width: 120, title: '采购价', sort: true}
+            ,{field: 'count', width: 120, title: '在库数量', sort: true}
+        ]
+  	]
+    ,page: {
+      curr: location.hash.replace('#!page=', '')
+      ,hash: 'page'
+    }
+  });
+
+  function initSearchForm() {
+    form.val('search-form', {
+      'goodsNo': ''
+      ,'goodsName': ''
+      ,'goodsLength': ''
+      ,'goodsWidth': ''
+      ,'goodsHeight': ''
+      ,'goodsValueMin': ''
+      ,'goodsValueMax': ''
+      ,'countMin': ''
+      ,'countMax': ''
+    })
+  }
+
+  // 注册表单校验规则
+  form.verify({
+    integer: validInteger
+    ,nullableNumber: validNumber
+  });
+
+  //监听查询
+  form.on('submit(submit-btn)', function(data){
+   	var fields = data.field;
+   	// 重新加载表格
+   	table.reload('mainTable', {
+   	  where: fields
+   	  ,page: {
+        curr: location.hash.replace('#!page=', '')
+        ,hash: 'page'
+      }
+   	});
+    return false;
+  });
+
+  //监听导出
+  form.on('submit(export-btn)', function(data){
+    layer.alert(JSON.stringify(data.field), {
+      title: '导出条件'
+    })
+    return false;
+  });
+
+  //监听重置
+  form.on('submit(reset-btn)', function(data){
+    initSearchForm();
+    return false;
+  });
+});
+
+</script>
+</body>
+</html>

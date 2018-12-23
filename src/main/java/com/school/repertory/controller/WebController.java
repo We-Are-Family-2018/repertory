@@ -106,6 +106,11 @@ public class WebController extends BaseController {
 		return "redirect:/login";
 	}
 	
+	@RequestMapping(value="/404")
+	public String notFound() {
+		return "404";
+	}
+	
 	@RequestMapping(value="/500")
 	public String serverError() {
 		return "500";

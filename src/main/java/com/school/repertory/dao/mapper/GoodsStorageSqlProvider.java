@@ -1,5 +1,6 @@
 package com.school.repertory.dao.mapper;
 
+import com.school.repertory.controller.form.SearchInventoryForm;
 import com.school.repertory.dao.model.GoodsStorage;
 import com.school.repertory.dao.model.GoodsStorageExample.Criteria;
 import com.school.repertory.dao.model.GoodsStorageExample.Criterion;
@@ -7,6 +8,7 @@ import com.school.repertory.dao.model.GoodsStorageExample;
 import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.jdbc.SQL;
+import org.springframework.util.StringUtils;
 
 public class GoodsStorageSqlProvider {
 
@@ -240,5 +242,64 @@ public class GoodsStorageSqlProvider {
         if (sb.length() > 0) {
             sql.WHERE(sb.toString());
         }
+    }
+    
+    public String selectGoodsAndStorage(SearchInventoryForm form) {
+    	SQL sql = new SQL();
+    	
+    	sql.SELECT("goods.*", "storage_count");
+    	
+    	sql.FROM("goods", "goods_storage");
+    	
+    	sql.WHERE("goods.goods_no = goods_storage.storage_goods_no");
+    	
+    	// 货物编号
+    	if (!StringUtils.isEmpty(form.getGoodsNo())) {
+    		String safeStr = form.getGoodsNo().replace("'", "\\'");
+    		sql.WHERE(String.format("goods.goods_no = '%s'", safeStr));
+    	}
+    	
+    	// 货物名称（模糊）
+    	if (!StringUtils.isEmpty(form.getGoodsName())) {
+    		String safeStr = form.getGoodsName().replace("'", "\\'");
+    		sql.WHERE(String.format("goods_name like '%%%s%%'", safeStr));
+    	}
+    	
+    	// 货物规格长度
+    	if (form.getGoodsLength() != null) {
+    		sql.WHERE("goods_size_length = " + form.getGoodsLength());
+    	}
+    	
+    	// 货物规格宽度
+    	if (form.getGoodsWidth() != null) {
+    		sql.WHERE("goods_size_width = " + form.getGoodsWidth());
+    	}
+    	
+    	// 货物规格高度
+    	if (form.getGoodsHeight() != null) {
+    		sql.WHERE("goods_size_height = " + form.getGoodsHeight());
+    	}
+    	
+    	// 货物价值下限
+    	if (form.getGoodsValueMin() != null) {
+    		sql.WHERE("goods_value >= " + form.getGoodsValueMin());
+    	}
+    	
+    	// 货物价值上限
+    	if (form.getGoodsValueMax() != null) {
+    		sql.WHERE("goods_value <= " + form.getGoodsValueMax());
+    	}
+    	
+    	// 货物库存下限
+    	if (form.getCountMin() != null) {
+    		sql.WHERE("storage_count >= " + form.getCountMin());
+    	}
+    	
+    	// 货物库存上限
+    	if (form.getCountMax() != null) {
+    		sql.WHERE("storage_count <= " + form.getCountMax());
+    	}
+    	
+    	return sql.toString();
     }
 }

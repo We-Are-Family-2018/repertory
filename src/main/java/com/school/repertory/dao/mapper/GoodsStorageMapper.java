@@ -1,5 +1,7 @@
 package com.school.repertory.dao.mapper;
 
+import com.school.repertory.controller.form.SearchInventoryForm;
+import com.school.repertory.dao.model.GoodsAndStorageModel;
 import com.school.repertory.dao.model.GoodsStorage;
 import com.school.repertory.dao.model.GoodsStorageExample;
 import java.util.List;
@@ -138,4 +140,16 @@ public interface GoodsStorageMapper {
         "where storage_goods_no = #{storageGoodsNo,jdbcType=VARCHAR}"
     })
     int updateByPrimaryKey(GoodsStorage record);
+    
+    @SelectProvider(type=GoodsStorageSqlProvider.class, method="selectGoodsAndStorage")
+    @Results({
+    	@Result(column="goods_no", property="goodsNo", jdbcType=JdbcType.VARCHAR, id=true),
+        @Result(column="goods_name", property="goodsName", jdbcType=JdbcType.VARCHAR),
+        @Result(column="goods_size_length", property="goodsSizeLength", jdbcType=JdbcType.DECIMAL),
+        @Result(column="goods_size_width", property="goodsSizeWidth", jdbcType=JdbcType.DECIMAL),
+        @Result(column="goods_size_height", property="goodsSizeHeight", jdbcType=JdbcType.DECIMAL),
+        @Result(column="goods_value", property="goodsValue", jdbcType=JdbcType.DECIMAL),
+        @Result(column="storage_count", property="storageCount", jdbcType=JdbcType.INTEGER)
+    })
+    List<GoodsAndStorageModel> selectGoodsAndStorage(SearchInventoryForm form);
 }

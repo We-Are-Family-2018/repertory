@@ -7,7 +7,7 @@ public class RespBody {
 	
 	private Object data;
 	
-	private RespBody(int code, String msg, Object data) {
+	protected RespBody(int code, String msg, Object data) {
 		super();
 		this.code = code;
 		this.msg = msg;
